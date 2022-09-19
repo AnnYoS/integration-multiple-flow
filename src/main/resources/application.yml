@@ -1,0 +1,48 @@
+spring:
+  applciation:
+    name: integration-multiple-flow
+  cloud:
+    stream:
+      default:
+        group: ${spring.application.name}
+      function:
+        definition:
+      kafka:
+        default:
+          consumer:
+            auto-offset-reset: earliest
+            enable-dlq: 'true'
+            dlq-name: public.error.business
+        binder:
+          consumer-properties:
+            key:
+              deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          producer-properties:
+            batch.size: 32768
+            key.serializer: org.apache.kafka.common.serialization.StringSerializer
+      bindings:
+        fileAPublisher-out-0:
+          destination: private.myapp.filea
+        fileBPublisher-out-0:
+          destination: private.myapp.fileb
+        fileCPublisher-out-0:
+          destination: private.myapp.filec
+        fileAConsumer-in-0:
+          destination: private.myapp.filea
+        fileBConsumer-in-0:
+          destination: private.myapp.fileb
+        fileCConsumer-in-0:
+          destination: private.myapp.filec
+        #todo bindings
+
+file-poller:
+  poller-fixed-delay: 10
+  thread-pool-size: 1
+  max-message-per-poll: 1
+  max-attempts: 1
+  timeout-for-file-size-check: 60000
+  retry-delay-in-seconds: 5
+  regex-pattern:
+    file-a: A(.*)\.txt
+    file-b: B(.*)\.txt
+    file-c: C(.*)\.txt

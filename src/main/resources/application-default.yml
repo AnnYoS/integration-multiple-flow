@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+file-poller:
+  input-path: D:\input\from
+  error-path: D:\input\error
+  archive-path: D:\input\archive
